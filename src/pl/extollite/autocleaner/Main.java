@@ -4,7 +4,9 @@ import cn.nukkit.Server;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.entity.Entity;
+import cn.nukkit.entity.item.EntityExpBottle;
 import cn.nukkit.entity.item.EntityItem;
+import cn.nukkit.entity.item.EntityXPOrb;
 import cn.nukkit.entity.mob.EntityMob;
 import cn.nukkit.entity.passive.EntityAnimal;
 import cn.nukkit.entity.passive.EntityWaterAnimal;
@@ -26,6 +28,7 @@ public class Main extends PluginBase implements Listener{
     private boolean deleteMobs;
     private boolean deleteAnimals;
     private boolean deleteProjectile;
+    private boolean deleteExpOrb;
     private String fiveSeconds;
     private String oneSecond;
     private String cleaned;
@@ -45,6 +48,7 @@ public class Main extends PluginBase implements Listener{
         oneSecond = this.getConfig().getString("1second");
         cleaned = this.getConfig().getString("cleaned");
         prefix = this.getConfig().getString("prefix");
+        deleteExpOrb = this.getConfig().getBoolean("deleteExpOrb");
         deleteProjectile = this.getConfig().getBoolean("deleteProjectile");
         if(warnTime > repeatTime/20){
             this.getLogger().error(TextFormat.RED + "Warn time is longer than repeat time! Change that in config.yml and use /reload.");
@@ -115,7 +119,8 @@ public class Main extends PluginBase implements Listener{
         }, repeatTime-(warnTime*20), repeatTime);
     }
 
-    void cleanAll(boolean onlyItems){
+    int cleanAll(boolean onlyItems){
+        int counter = 0;
         Server s = this.getServer();
         Map<Integer, Level> levels = s.getLevels();
         for(Map.Entry<Integer, Level> level : levels.entrySet()){
@@ -125,18 +130,27 @@ public class Main extends PluginBase implements Listener{
             for(Entity entity : entities){
                 if(entity instanceof EntityItem){
                     level.getValue().removeEntity(entity);
+                    counter++;
                 }
                 else if( entity instanceof EntityMob && deleteMobs && !onlyItems){
                     level.getValue().removeEntity(entity);
+                    counter++;
                 }
                 else if( ( entity instanceof EntityAnimal || entity instanceof EntityWaterAnimal) && deleteAnimals && !onlyItems){
                     level.getValue().removeEntity(entity);
+                    counter++;
                 }
                 else if((entity instanceof EntityProjectile) && deleteProjectile){
                     level.getValue().removeEntity(entity);
+                    counter++;
+                }
+                else if((entity instanceof EntityXPOrb) && deleteExpOrb){
+                    level.getValue().removeEntity(entity);
+                    counter++;
                 }
             }
         }
+        return counter;
     }
 
     boolean getDeleteMobs(){

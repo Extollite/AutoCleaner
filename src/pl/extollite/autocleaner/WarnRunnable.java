@@ -23,8 +23,7 @@ public class WarnRunnable implements Runnable {
     @Override
     public void run(){
         if(counter == 0){
-            plugin.getServer().broadcastMessage(plugin.getPrefix()+TextFormat.RED + plugin.getCleaned());
-            plugin.cleanAll(false);
+            plugin.getServer().broadcastMessage(plugin.getPrefix()+TextFormat.RED + plugin.getCleaned().replace("%counter%", String.valueOf(plugin.cleanAll(false))));
             plugin.getServer().getScheduler().cancelTask(id);
         }
         else if(counter == 1){

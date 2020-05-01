@@ -3,7 +3,8 @@ warnBefore: 5
 deleteMobs: false
 deleteAnimals: false
 deleteProjectile: false
+deleteExpOrb: false
 5+seconds: "%counter% seconds left to cleaning entities."
 1second: "%counter% second left to cleaning entities."
-cleaned: "Entites cleaned!"
+cleaned: "%counter% entites cleaned!"
 prefix: "§6[autocleaner]§f "
